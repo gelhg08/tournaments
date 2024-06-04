@@ -1,39 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tournament } from '../../tournaments/entities/tournaments.entity';
+import { Player } from '../../players/entities/players.entity';
+import { CreateTournamentDto } from '../dto/create-tournament.dto';
+import { UpdateTournamentDto } from '../dto/update-tournament.dto';
 
 @Injectable()
 export class TournamentsService {
   constructor(
     @InjectRepository(Tournament)
     private tournamentsRepository: Repository<Tournament>,
+    @InjectRepository(Player)
+    private readonly playerRepository: Repository<Player>,
   ) {}
 
-  async create(tournamentData: Tournament): Promise<Tournament> {
-    const tournament = this.tournamentsRepository.create(tournamentData);
-    return await this.tournamentsRepository.save(tournament);
+  async create(createTournamentDto: CreateTournamentDto): Promise<Tournament> {
+    const tournament = this.tournamentsRepository.create(createTournamentDto);
+    return this.tournamentsRepository.save(tournament);
   }
 
-  async findAll(page: number, limit: number): Promise<Tournament[]> {
-    const [tournament, total] = await this.tournamentsRepository.findAndCount({take: limit, skip: (page - 1) * limit,
-    }); 
-    return tournament;
-}
+  async findAll(): Promise<Tournament[]> {
+    return this.tournamentsRepository.find({ relations: ['players', 'results'] });
+  }
 
   async findOne(id: number): Promise<Tournament> {
-    return this.tournamentsRepository.findOne({
-      where: { id },
-      relations: ['players'],
-    });
+    const tournament = await this.tournamentsRepository.findOne(id, { relations: ['players', 'results'] });
+    if (!tournament) {
+      throw new NotFoundException(`Tournament with ID ${id} not found`);
+    }
+    return tournament;
   }
 
-  async update(id: number, tournamentData: Tournament): Promise<Tournament> {
-    await this.tournamentsRepository.update(id, tournamentData);
-    return this.findOne(id);
+  async update(id: number, updateTournamentDto: UpdateTournamentDto): Promise<Tournament> {
+    await this.tournamentsRepository.update(id, updateTournamentDto);
+    const updatedTournament = await this.tournamentsRepository.findOne(id, { relations: ['players', 'results'] });
+    if (!updatedTournament) {
+      throw new NotFoundException(`Tournament with ID ${id} not found`);
+    }
+    return updatedTournament;
   }
-
   async remove(id: number): Promise<void> {
-    await this.tournamentsRepository.softDelete(id);
+    const result = await this.tournamentsRepository.softDelete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Tournament with ID ${id} not found`);
+    }
+  }
+
+  async addPlayer(tournamentId: number, playerId: number): Promise<Tournament> {
+    const tournament = await this.findOne(tournamentId);
+    const player = await this.playerRepository.findOne(playerId);
+    if (!player) {
+      throw new NotFoundException(`Player with ID ${playerId} not found`);
+    }
+    tournament.players.push(player);
+    return this.tournamentsRepository.save(tournament);
   }
 }

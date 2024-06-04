@@ -38,3 +38,5 @@ export class Player {
   @DeleteDateColumn()
   deletedAt?: Date;
 }
+
+
