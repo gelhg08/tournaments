@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  DeleteDateColumn,
+  CreateDateColumn, UpdateDateColumn
+} from 'typeorm';
 import { Player } from '../../players/entities/players.entity';
 import { Result } from '../../result/entities/result.entity';
 
@@ -17,8 +26,14 @@ export class Tournament {
   @JoinTable()
   players: Player[];
 
-  @OneToMany(() => Result, result => result.tournament)
+  @OneToMany(() => Result, (result) => result.tournament)
   results: Result[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @DeleteDateColumn()
   deletedAt?: Date;
