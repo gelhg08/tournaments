@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { Player } from '../../players/entities/players.entity';
 import { CreatePlayerDto } from '../dto/create-player.dto';
 import { UpdatePlayerDto } from '../dto/update-player.dto';
+import { PaginationDto } from '../../../global/pagination/pagination.dto';
 
 @Injectable()
 export class PlayerService {
@@ -18,10 +19,18 @@ export class PlayerService {
   }
   
 
-  async findAll(): Promise<Player[]> {
-    return this.playerRepository.find({
+  async findAll(paginationDto: PaginationDto): Promise<Player[]> {
+    const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'ASC' } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const options: FindManyOptions<Player> = {
       relations: ['tournaments', 'resultsAsWinner', 'resultsAsLoser'],
-    });
+      skip,
+      take: limit,
+      order: { [sortBy]: sortOrder },
+    };
+
+    return this.playerRepository.find(options);
   }
 
   async findOne(id: number): Promise<Player> {

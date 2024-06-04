@@ -3,6 +3,9 @@ import { ResultService } from '../services/result.service';
 import { CreateResultDto } from '../dto/create-result.dto';
 import { UpdateResultDto } from '../dto/update-result.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Query } from '@nestjs/common';
+import { PaginationDto } from'src/global/pagination/pagination.dto';
+import { Result } from '../entities/result.entity';
 
 @ApiTags('results')
 @Controller('results')
@@ -21,13 +24,9 @@ export class ResultController {
     return this.resultService.create(createResultDto);
   }
 
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get all results' })
-  @ApiResponse({ status: 200, description: 'Return all results.' })
-  @ApiResponse({ status: 404, description: 'No results found.' })
-  async findAll() {
-    const results = await this.resultService.findAll();
+  @Get('all')
+  async findAll(@Query() paginationDto: PaginationDto): Promise<Result[]> {
+    const results = await this.resultService.findAll(paginationDto);
     if (results.length === 0) {
       throw new NotFoundException('No results found');
     }

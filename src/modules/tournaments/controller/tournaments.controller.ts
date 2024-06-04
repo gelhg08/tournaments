@@ -4,6 +4,8 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateTournamentDto } from '../dto/create-tournament.dto';
 import {UpdateTournamentDto } from '../dto/update-tournament.dto';
 import { Query } from '@nestjs/common';
+import { PaginationDto } from 'src/global/pagination/pagination.dto';
+import { Tournament } from '../entities/tournaments.entity';
 
 @Controller('tournaments')
 export class TournamentsController {
@@ -22,13 +24,9 @@ export class TournamentsController {
     return this.tournamentService.create(createTournamentDto);
   }
 
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get all tournaments' })
-  @ApiResponse({ status: 200, description: 'Return all tournaments.' })
-  @ApiResponse({ status: 404, description: 'No tournaments found.' })
-  async findAll() {
-    const tournaments = await this.tournamentService.findAll();
+  @Get('all')
+  async findAll(@Query() paginationDto: PaginationDto): Promise<Tournament[]> {
+    const tournaments = await this.tournamentService.findAll(paginationDto);
     if (tournaments.length === 0) {
       throw new NotFoundException('No tournaments found');
     }

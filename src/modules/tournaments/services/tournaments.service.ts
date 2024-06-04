@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { Tournament } from '../../tournaments/entities/tournaments.entity';
 import { CreateTournamentDto } from '../dto/create-tournament.dto';
 import { UpdateTournamentDto } from '../dto/update-tournament.dto';
 import { Player } from '../../players/entities/players.entity'
+import { PaginationDto } from 'src/global/pagination/pagination.dto';
 
 @Injectable()
 export class TournamentService {
@@ -20,10 +21,18 @@ export class TournamentService {
     return this.tournamentRepository.save(tournament);
   }
 
-  async findAll(): Promise<Tournament[]> {
-    return this.tournamentRepository.find({
+  async findAll(paginationDto: PaginationDto): Promise<Tournament[]> {
+    const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'ASC' } = paginationDto;
+    const skip = (page - 1) * limit;
+
+    const options: FindManyOptions<Tournament> = {
       relations: ['players', 'results'],
-    });
+      skip,
+      take: limit,
+      order: { [sortBy]: sortOrder },
+    };
+
+    return this.tournamentRepository.find(options);
   }
 
   async findOne(id: number): Promise<Tournament> {
