@@ -6,7 +6,7 @@ import {UpdateResultDto } from '../dto/update-result.dto'
 import { Result } from '../entities/result.entity';
 import { Query } from '@nestjs/common';
 
-
+@ApiTags('esports')
 @Controller('results')
 export class ResultController {
   constructor(private readonly resultService: ResultService) {}

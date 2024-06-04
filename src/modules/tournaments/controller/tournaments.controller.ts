@@ -16,6 +16,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Tournament } from '../entities/tournaments.entity';
 import { ApiKeyGuard } from 'src/global/guard/api-key.guards';
 
+@ApiTags('esports')
 @Controller('tournaments')
 @UseGuards(ApiKeyGuard)
 export class TournamentsController {
