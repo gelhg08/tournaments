@@ -1,27 +1,16 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Put,
-  Param,
-  Delete,
-  HttpCode,
-  HttpStatus,
-  NotFoundException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
 import { TournamentsService } from '../services/tournaments.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateTournamentDto } from '../dto/create-tournament.dto';
-import { UpdateTournamentDto } from '../dto/update-tournament.dto';
+import {UpdateTournamentDto } from '../dto/update-tournament.dto';
+import { Query } from '@nestjs/common';
 
 @Controller('tournaments')
 export class TournamentsController {
   constructor(private readonly tournamentService: TournamentsService) {}
 
-  @Post('new')
-  @HttpCode(HttpStatus.CREATED)
-  @Post('new')
+    @Post('new')
+  @HttpCode(HttpStatus.CREATED)@Post('new')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create an tournament' })
   @ApiResponse({
@@ -30,10 +19,10 @@ export class TournamentsController {
   })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   create(@Body() createTournamentDto: CreateTournamentDto) {
-    return this.tournamentService.create(CreateTournamentDto);
+    return this.tournamentService.create(createTournamentDto);
   }
 
-  @Get('all')
+  @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all tournaments' })
   @ApiResponse({ status: 200, description: 'Return all tournaments.' })
@@ -51,7 +40,7 @@ export class TournamentsController {
   @ApiOperation({ summary: 'Get an tournament by ID' })
   @ApiResponse({ status: 200, description: 'Return the tournament.' })
   @ApiResponse({ status: 404, description: 'Tournament not found.' })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.tournamentService.findOne(+id);
   }
 
@@ -63,27 +52,20 @@ export class TournamentsController {
     description: 'The tournament has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'Tournament not found.' })
-  update(
-    @Param('id') id: string,
-    @Body() updateTournamentDto: UpdateTournamentDto,
-  ) {
+  update(@Param('id') id: string, @Body() updateTournamentDto: UpdateTournamentDto) {
     return this.tournamentService.update(+id, updateTournamentDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete an tournament' })
-  @ApiResponse({
-    status: 204,
-    description: 'The tournamet has been successfully deleted.',
-  })
+  @ApiResponse({ status: 204, description: 'The tournament has been successfully deleted.' })
   @ApiResponse({ status: 404, description: 'Tournament not found.' })
-  remove(@Param('id') id: string) {
-    return this.tournamentService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.tournamentService.remove(id);
   }
-}
 
-@Post(':id/players/:playerId')
+  @Post(':id/players/:playerId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Add a player to a tournament' })
   @ApiResponse({ status: 200, description: 'Player added to the tournament.' })
@@ -92,3 +74,6 @@ export class TournamentsController {
     return this.tournamentService.addPlayer(+tournamentId, +playerId);
   }
 }
+
+  
+

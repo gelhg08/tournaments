@@ -1,31 +1,31 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
-import { ResultService } from '../services/result.service'
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ResultService } from '../services/result.service';
 import { CreateResultDto } from '../dto/create-result.dto';
-import {UpdateResultDto } from '../dto/update-result.dto'
+import { UpdateResultDto } from '../dto/update-result.dto';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-
+@ApiTags('results')
 @Controller('results')
 export class ResultController {
   constructor(private readonly resultService: ResultService) {}
 
-  @Post('new')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create an result' })
+  @ApiOperation({ summary: 'Create a new result' })
   @ApiResponse({
     status: 201,
     description: 'The result has been successfully created.',
   })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  create(@Body() createPlayerDto: CreateResultDto) {
-    return this.resultService.create(CreateResultDto);
+  create(@Body() createResultDto: CreateResultDto) {
+    return this.resultService.create(createResultDto);
   }
 
-  @Get('all')
+  @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all results' })
   @ApiResponse({ status: 200, description: 'Return all results.' })
-  @ApiResponse({ status: 404, description: 'No result found.' })
+  @ApiResponse({ status: 404, description: 'No results found.' })
   async findAll() {
     const results = await this.resultService.findAll();
     if (results.length === 0) {
@@ -36,7 +36,7 @@ export class ResultController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get an result by ID' })
+  @ApiOperation({ summary: 'Get a result by ID' })
   @ApiResponse({ status: 200, description: 'Return the result.' })
   @ApiResponse({ status: 404, description: 'Result not found.' })
   findOne(@Param('id') id: string) {
@@ -45,7 +45,7 @@ export class ResultController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Update an result' })
+  @ApiOperation({ summary: 'Update a result' })
   @ApiResponse({
     status: 200,
     description: 'The result has been successfully updated.',
@@ -57,7 +57,7 @@ export class ResultController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Delete an result' })
+  @ApiOperation({ summary: 'Delete a result' })
   @ApiResponse({
     status: 204,
     description: 'The result has been successfully deleted.',
@@ -67,3 +67,4 @@ export class ResultController {
     return this.resultService.remove(+id);
   }
 }
+

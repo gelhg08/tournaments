@@ -22,8 +22,6 @@ export class Player {
   @Column()
   email: string;
 
-  @Column()
-  age: number;
 
   @ManyToMany(() => Tournament, (tournament) => tournament.players)
   tournaments: Tournament[];

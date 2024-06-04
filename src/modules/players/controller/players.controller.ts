@@ -3,8 +3,9 @@ import { PlayersService } from '../services/players.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreatePlayerDto } from '../dto/create-player.dto';
 import {UpdatePlayerDto } from '../dto/update-player.dto'
+import { Query } from '@nestjs/common';
 
-
+@ApiTags('esports')
 @Controller('players')
 export class PlayersController {
   constructor(private readonly playerService: PlayersService) {}
@@ -26,8 +27,8 @@ export class PlayersController {
   @ApiOperation({ summary: 'Get all players' })
   @ApiResponse({ status: 200, description: 'Return all players.' })
   @ApiResponse({ status: 404, description: 'No players found.' })
-  async findAll() {
-    const players = await this.playerService.findAll();
+  async findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    const players = await this.playerService.findAll(page, limit);
     if (players.length === 0) {
       throw new NotFoundException('No players found');
     }
@@ -51,8 +52,8 @@ export class PlayersController {
     description: 'The player has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'Player not found.' })
-  update(@Param('id') id: string, @Body() updateAuthorDto: UpdatePlayerDto) {
-    return this.playerService.update(+id, updateAuthorDto);
+  update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
+    return this.playerService.update(+id, updatePlayerDto);
   }
 
   @Delete(':id')
