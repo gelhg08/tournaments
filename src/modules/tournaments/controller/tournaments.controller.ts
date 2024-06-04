@@ -9,16 +9,13 @@ import {
   HttpCode,
   HttpStatus,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { TournamentsService } from '../services/tournaments.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Tournament } from '../entities/tournaments.entity';
-import { ApiKeyGuard } from 'src/global/guard/api-key.guards';
+import { query } from 'express';
 
-@ApiTags('esports')
 @Controller('tournaments')
-@UseGuards(ApiKeyGuard)
 export class TournamentsController {
   constructor(private readonly tournamentService: TournamentsService) {}
 
