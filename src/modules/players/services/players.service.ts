@@ -44,6 +44,8 @@ export class PlayerService {
     return player;
   }
 
+
+
   async update(id: number, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
     const player = await this.playerRepository.preload({
       ...updatePlayerDto,

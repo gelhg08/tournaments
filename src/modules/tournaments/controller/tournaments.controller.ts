@@ -7,6 +7,7 @@ import { Query } from '@nestjs/common';
 import { PaginationDto } from 'src/global/pagination/pagination.dto';
 import { Tournament } from '../entities/tournaments.entity';
 
+@ApiTags('tournaments')
 @Controller('tournaments')
 export class TournamentsController {
   constructor(private readonly tournamentService: TournamentService) {}

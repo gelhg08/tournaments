@@ -6,7 +6,7 @@ import {UpdatePlayerDto } from '../dto/update-player.dto'
 import { Query } from '@nestjs/common';
 import { Player } from '../entities/players.entity';
 
-@ApiTags('esports')
+@ApiTags('players')
 @Controller('players')
 export class PlayersController {
   constructor(private readonly playerService: PlayerService) {}
@@ -64,4 +64,6 @@ export class PlayersController {
   remove(@Param('id') id: string) {
     return this.playerService.remove(+id);
   }
+
+  
 }
