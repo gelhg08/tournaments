@@ -1,14 +1,6 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  DeleteDateColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, DeleteDateColumn } from 'typeorm';
+import {Player} from '../../players/entities/players.entity';
 import { Tournament } from '../../tournaments/entities/tournaments.entity';
-import { Player } from '../../players/entities/players.entity';
 
 @Entity()
 export class Result {
@@ -18,14 +10,11 @@ export class Result {
   @ManyToOne(() => Tournament, (tournament) => tournament.results)
   tournament: Tournament;
 
-  @ManyToOne(() => Player)
+  @ManyToOne(() => Player, (player) => player.resultsAsWinner)
   winner: Player;
 
-  @ManyToOne(() => Player)
+  @ManyToOne(() => Player, (player) => player.resultsAsLoser)
   loser: Player;
-
-  @ManyToOne(() => Player, (player) => player.results)
-  player: Player;
 
   @Column()
   winnerScore: number;
@@ -33,12 +22,7 @@ export class Result {
   @Column()
   loserScore: number;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
   @DeleteDateColumn()
   deletedAt?: Date;
 }
+

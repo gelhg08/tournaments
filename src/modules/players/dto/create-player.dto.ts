@@ -4,18 +4,12 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreatePlayerDto {
   @ApiProperty({ description: 'Players name' })
   @IsString()
-  name: string;
+  readonly name: string;
 
-  @ApiProperty({ description: 'Players age' })
-  @IsString()
-  age: string;
 
   @ApiProperty({ description: 'Players email' })
   @IsString()
   @IsEmail()
-  email: string;
+  readonly email: string;
 
-  @IsArray()
-  @IsOptional()
-  tournaments?: string[];
 }

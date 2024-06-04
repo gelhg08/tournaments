@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
-import { TournamentsService } from '../services/tournaments.service';
+import { TournamentService } from '../../tournaments/services/tournaments.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateTournamentDto } from '../dto/create-tournament.dto';
 import {UpdateTournamentDto } from '../dto/update-tournament.dto';
@@ -7,7 +7,7 @@ import { Query } from '@nestjs/common';
 
 @Controller('tournaments')
 export class TournamentsController {
-  constructor(private readonly tournamentService: TournamentsService) {}
+  constructor(private readonly tournamentService: TournamentService) {}
 
     @Post('new')
   @HttpCode(HttpStatus.CREATED)@Post('new')

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Player } from '../entities/player.entity';
+import { Player } from '../../players/entities/players.entity';
 import { CreatePlayerDto } from '../dto/create-player.dto';
 import { UpdatePlayerDto } from '../dto/update-player.dto';
 
@@ -12,17 +12,23 @@ export class PlayerService {
     private readonly playerRepository: Repository<Player>,
   ) {}
 
-  async create(createPlayerDto: CreatePlayerDto): Promise<Player> {
-    const player = this.playerRepository.create(createPlayerDto);
-    return this.playerRepository.save(player);
+  async create(createPlayerDto: CreatePlayerDto[]): Promise<Player[]> {
+    const players = this.playerRepository.create(createPlayerDto);
+    return this.playerRepository.save(players);
   }
+  
 
   async findAll(): Promise<Player[]> {
-    return this.playerRepository.find();
+    return this.playerRepository.find({
+      relations: ['tournaments', 'resultsAsWinner', 'resultsAsLoser'],
+    });
   }
 
   async findOne(id: number): Promise<Player> {
-    const player = await this.playerRepository.findOne(id);
+    const player = await this.playerRepository.findOne({
+      where: { id },
+      relations: ['tournaments', 'resultsAsWinner', 'resultsAsLoser'],
+    });
     if (!player) {
       throw new NotFoundException(`Player with ID ${id} not found`);
     }
@@ -31,7 +37,6 @@ export class PlayerService {
 
   async update(id: number, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
     const player = await this.playerRepository.preload({
-      id: id,
       ...updatePlayerDto,
     });
     if (!player) {
