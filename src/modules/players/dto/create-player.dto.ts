@@ -1,4 +1,4 @@
-import { IsString, IsEmail} from 'class-validator'; 
+import { IsString, IsEmail, IsArray, IsOptional} from 'class-validator'; 
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePlayerDto {
@@ -14,4 +14,8 @@ export class CreatePlayerDto {
   @IsString()
   @IsEmail()
   email: string;
+
+  @IsArray()
+  @IsOptional()
+  tournaments?: string[];
 }

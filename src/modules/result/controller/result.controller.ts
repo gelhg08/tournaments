@@ -3,67 +3,36 @@ import { ResultService } from '../services/result.service'
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateResultDto } from '../dto/create-result.dto';
 import {UpdateResultDto } from '../dto/update-result.dto'
+import { Result } from '../entities/result.entity';
+import { Query } from '@nestjs/common';
 
 
 @Controller('results')
 export class ResultController {
   constructor(private readonly resultService: ResultService) {}
 
-  @Post('new')
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create an result' })
-  @ApiResponse({
-    status: 201,
-    description: 'The result has been successfully created.',
-  })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })
-  create(@Body() createPlayerDto: CreateResultDto) {
-    return this.resultService.create(CreateResultDto);
+  @Post()
+  create(@Body() createResultDto: Result) {
+    return this.resultService.create(createResultDto);
   }
 
-  @Get('all')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get all results' })
-  @ApiResponse({ status: 200, description: 'Return all results.' })
-  @ApiResponse({ status: 404, description: 'No result found.' })
-  async findAll() {
-    const results = await this.resultService.findAll();
-    if (results.length === 0) {
-      throw new NotFoundException('No results found');
-    }
-    return results;
+  @Get()
+  findAll(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.resultService.findAll(page, limit);
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get an result by ID' })
-  @ApiResponse({ status: 200, description: 'Return the result.' })
-  @ApiResponse({ status: 404, description: 'Result not found.' })
-  findOne(@Param('id') id: string) {
-    return this.resultService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.resultService.findOne(id);
   }
 
   @Put(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Update an result' })
-  @ApiResponse({
-    status: 200,
-    description: 'The result has been successfully updated.',
-  })
-  @ApiResponse({ status: 404, description: 'Result not found.' })
-  update(@Param('id') id: string, @Body() updateResultDto: UpdateResultDto) {
-    return this.resultService.update(+id, updateResultDto);
+  update(@Param('id') id: number, @Body() updateResultDto: Result) {
+    return this.resultService.update(id, updateResultDto);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Delete an result' })
-  @ApiResponse({
-    status: 204,
-    description: 'The result has been successfully deleted.',
-  })
-  @ApiResponse({ status: 404, description: 'Result not found.' })
-  remove(@Param('id') id: string) {
-    return this.resultService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.resultService.remove(id);
   }
 }
