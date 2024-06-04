@@ -1,15 +1,27 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { TournamentsService } from '../services/tournaments.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateTournamentDto } from '../dto/create-tournament.dto';
-import {UpdateTournamentDto } from '../dto/update-tournament.dto'
+import { UpdateTournamentDto } from '../dto/update-tournament.dto';
 
 @Controller('tournaments')
 export class TournamentsController {
-    constructor(private readonly tournamentService: TournamentsService) {}
+  constructor(private readonly tournamentService: TournamentsService) {}
 
-    @Post('new')
-  @HttpCode(HttpStatus.CREATED)@Post('new')
+  @Post('new')
+  @HttpCode(HttpStatus.CREATED)
+  @Post('new')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create an tournament' })
   @ApiResponse({
@@ -51,7 +63,10 @@ export class TournamentsController {
     description: 'The tournament has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'Tournament not found.' })
-  update(@Param('id') id: string, @Body() updateTournamentDto: UpdateTournamentDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTournamentDto: UpdateTournamentDto,
+  ) {
     return this.tournamentService.update(+id, updateTournamentDto);
   }
 
@@ -66,6 +81,14 @@ export class TournamentsController {
   remove(@Param('id') id: string) {
     return this.tournamentService.remove(+id);
   }
+}
 
-  
+@Post(':id/players/:playerId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Add a player to a tournament' })
+  @ApiResponse({ status: 200, description: 'Player added to the tournament.' })
+  @ApiResponse({ status: 404, description: 'Tournament or player not found.' })
+  addPlayer(@Param('id') tournamentId: string, @Param('playerId') playerId: string) {
+    return this.tournamentService.addPlayer(+tournamentId, +playerId);
+  }
 }
