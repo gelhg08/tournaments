@@ -4,6 +4,9 @@ import { PlayersModule } from './modules/players/players.module';
 import { ResultsModule } from './modules/result/result.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { RewardsModule } from './modules/rewards/rewards.module';
+import { CronService } from './modules/rewards/services/cron.service';
+import { RewardsService } from './modules/rewards/services/rewards.service';
 
 @Module({
   imports: [
@@ -22,8 +25,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TournamentsModule,
     PlayersModule,
     ResultsModule,
+    RewardsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [CronService, RewardsService],
 })
 export class AppModule {}
