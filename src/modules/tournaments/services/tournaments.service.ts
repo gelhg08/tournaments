@@ -4,7 +4,7 @@ import { Repository, FindManyOptions } from 'typeorm';
 import { Tournament } from '../../tournaments/entities/tournaments.entity';
 import { CreateTournamentDto } from '../dto/create-tournament.dto';
 import { UpdateTournamentDto } from '../dto/update-tournament.dto';
-import { Player } from '../../players/entities/players.entity'
+import { Player } from '../../players/entities/players.entity';
 import { PaginationDto } from 'src/global/pagination/pagination.dto';
 
 @Injectable()
@@ -22,7 +22,12 @@ export class TournamentService {
   }
 
   async findAll(paginationDto: PaginationDto): Promise<Tournament[]> {
-    const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'ASC' } = paginationDto;
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'id',
+      sortOrder = 'ASC',
+    } = paginationDto;
     const skip = (page - 1) * limit;
 
     const options: FindManyOptions<Tournament> = {
@@ -46,7 +51,10 @@ export class TournamentService {
     return tournament;
   }
 
-  async update(id: number, updateTournamentDto: UpdateTournamentDto): Promise<Tournament> {
+  async update(
+    id: number,
+    updateTournamentDto: UpdateTournamentDto,
+  ): Promise<Tournament> {
     const tournament = await this.tournamentRepository.preload({
       id: id,
       ...updateTournamentDto,
@@ -76,11 +84,15 @@ export class TournamentService {
     return this.tournamentRepository.save(tournament);
   }
 
-  async removePlayer(tournamentId: number, playerId: number): Promise<Tournament> {
+  async removePlayer(
+    tournamentId: number,
+    playerId: number,
+  ): Promise<Tournament> {
     const tournament = await this.findOne(tournamentId);
 
-    tournament.players = tournament.players.filter(player => player.id !== playerId);
+    tournament.players = tournament.players.filter(
+      (player) => player.id !== playerId,
+    );
     return this.tournamentRepository.save(tournament);
   }
 }
-

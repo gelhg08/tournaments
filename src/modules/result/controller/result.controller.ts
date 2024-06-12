@@ -1,10 +1,21 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { ResultService } from '../services/result.service';
 import { CreateResultDto } from '../dto/create-result.dto';
 import { UpdateResultDto } from '../dto/update-result.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Query } from '@nestjs/common';
-import { PaginationDto } from'src/global/pagination/pagination.dto';
+import { PaginationDto } from 'src/global/pagination/pagination.dto';
 import { Result } from '../entities/result.entity';
 
 @ApiTags('results')
@@ -66,4 +77,3 @@ export class ResultController {
     return this.resultService.remove(+id);
   }
 }
-

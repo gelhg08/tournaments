@@ -7,7 +7,7 @@ import { UpdatePlayerDto } from '../dto/update-player.dto';
 import { PaginationDto } from '../../../global/pagination/pagination.dto';
 
 @Injectable()
-export class PlayerService {
+export class PlayersService {
   constructor(
     @InjectRepository(Player)
     private readonly playerRepository: Repository<Player>,
@@ -17,10 +17,14 @@ export class PlayerService {
     const players = this.playerRepository.create(createPlayerDto);
     return this.playerRepository.save(players);
   }
-  
 
   async findAll(paginationDto: PaginationDto): Promise<Player[]> {
-    const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'ASC' } = paginationDto;
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'id',
+      sortOrder = 'ASC',
+    } = paginationDto;
     const skip = (page - 1) * limit;
 
     const options: FindManyOptions<Player> = {
@@ -44,8 +48,6 @@ export class PlayerService {
     return player;
   }
 
-
-
   async update(id: number, updatePlayerDto: UpdatePlayerDto): Promise<Player> {
     const player = await this.playerRepository.preload({
       ...updatePlayerDto,
@@ -63,4 +65,3 @@ export class PlayerService {
     }
   }
 }
-

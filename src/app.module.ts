@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TournamentsModule } from './modules/tournaments/tournaments.module';
 import { PlayersModule } from './modules/players/players.module';
-import { ResultModule } from './modules/result/result.module';
+import { ResultsModule } from './modules/result/result.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -21,7 +21,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     TournamentsModule,
     PlayersModule,
-    ResultModule,
+    ResultsModule,
   ],
   controllers: [],
   providers: [],

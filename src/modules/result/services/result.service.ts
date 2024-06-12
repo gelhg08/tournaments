@@ -20,11 +20,16 @@ export class ResultService {
   ) {}
 
   async create(createResultDto: CreateResultDto): Promise<Result> {
-    const { tournamentId, winnerId, loserId, winnerScore, loserScore } = createResultDto;
+    const { tournamentId, winnerId, loserId, winnerScore, loserScore } =
+      createResultDto;
 
-    const tournament = await this.tournamentRepository.findOneBy({ id: tournamentId });
+    const tournament = await this.tournamentRepository.findOneBy({
+      id: tournamentId,
+    });
     if (!tournament) {
-      throw new NotFoundException(`Tournament with ID ${tournamentId} not found`);
+      throw new NotFoundException(
+        `Tournament with ID ${tournamentId} not found`,
+      );
     }
 
     const winner = await this.playerRepository.findOneBy({ id: winnerId });
@@ -49,7 +54,12 @@ export class ResultService {
   }
 
   async findAll(paginationDto: PaginationDto): Promise<Result[]> {
-    const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'ASC' } = paginationDto;
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'id',
+      sortOrder = 'ASC',
+    } = paginationDto;
     const skip = (page - 1) * limit;
 
     const options: FindManyOptions<Result> = {
@@ -74,7 +84,8 @@ export class ResultService {
   }
 
   async update(id: number, updateResultDto: UpdateResultDto): Promise<Result> {
-    const { tournamentId, winnerId, loserId, winnerScore, loserScore } = updateResultDto;
+    const { tournamentId, winnerId, loserId, winnerScore, loserScore } =
+      updateResultDto;
 
     const result = await this.resultRepository.preload({
       id,
@@ -87,9 +98,13 @@ export class ResultService {
     }
 
     if (tournamentId) {
-      const tournament = await this.tournamentRepository.findOneBy({ id: tournamentId });
+      const tournament = await this.tournamentRepository.findOneBy({
+        id: tournamentId,
+      });
       if (!tournament) {
-        throw new NotFoundException(`Tournament with ID ${tournamentId} not found`);
+        throw new NotFoundException(
+          `Tournament with ID ${tournamentId} not found`,
+        );
       }
       result.tournament = tournament;
     }
@@ -120,5 +135,3 @@ export class ResultService {
     }
   }
 }
-
-
