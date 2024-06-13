@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  DeleteDateColumn,
+} from 'typeorm';
 import { Player } from '../../players/entities/players.entity';
 import { Result } from '../../result/entities/result.entity';
 
@@ -23,4 +31,3 @@ export class Tournament {
   @DeleteDateColumn()
   deletedAt?: Date;
 }
-

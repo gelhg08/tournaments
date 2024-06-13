@@ -1,5 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, DeleteDateColumn } from 'typeorm';
-import {Player} from '../../players/entities/players.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  DeleteDateColumn,
+} from 'typeorm';
+import { Player } from '../../players/entities/players.entity';
 import { Tournament } from '../../tournaments/entities/tournaments.entity';
 
 @Entity()
@@ -25,4 +31,3 @@ export class Result {
   @DeleteDateColumn()
   deletedAt?: Date;
 }
-

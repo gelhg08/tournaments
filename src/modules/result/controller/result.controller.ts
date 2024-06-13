@@ -23,7 +23,7 @@ import { Result } from '../entities/result.entity';
 export class ResultController {
   constructor(private readonly resultService: ResultService) {}
 
-  @Post()
+  @Post('new')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new result' })
   @ApiResponse({

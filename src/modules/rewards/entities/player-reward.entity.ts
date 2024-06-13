@@ -1,4 +1,3 @@
-// src/rewards/entities/player-reward.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
